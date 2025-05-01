@@ -26,6 +26,8 @@ No momento, estamos focados em algoritmos de ordenação, tendo visto até agora
 - 👨‍💻 Tim-Sort
 - 🛗 Heap-Sort
 - 🔢 Counting-Sort
+- 🪣 Bucket-Sort
+- 🧮 Radix-Sort
 
 E ainda serão explorados conceitos como:
 - 🌳 Árvore Rubro-Negra
