@@ -82,7 +82,7 @@ class HashTable:
 
     #com esses métodos especiais conseguimos fazer com que nossa tabela hash se comporte como um dicionario de fato, nos permitindo criar itens na tabela com um tabelaHash['nomeChave'] = valor e buscar elementos com um tabelaHash['nomeChave'].
     def __setitem__(self, chave, valor):
-        return self.inserirTabela(chave, valor)
+        self.inserirTabela(chave, valor)
     
     def __getitem__(self, chave):
         return self.procurarTabela(chave)
