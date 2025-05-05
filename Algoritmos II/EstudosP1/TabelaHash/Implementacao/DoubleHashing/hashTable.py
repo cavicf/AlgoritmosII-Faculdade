@@ -8,29 +8,36 @@
 #As duas estratégias mais populares são a de endereçamento aberto e endereçamento fechado.
 #Endereçamento aberto se refere a ideia de que quando vamos inserir um novo dado na tabela, se ocorrer uma colisão com outro elemento ja presente na tabela, procuramos o próximo slot disponível da tabela para inserir esse dado. Essa técnica também é conhecida como 'hashing fechado' pois não saímos da tabela para tratar as colisões, cada dado é inserido em uma posição de indice dado pela função hash. Existem 3 principais técnicas de calcular esse próximo slot disponivel da tabela: linear probing (sondagem linear), quadractic probing(sondagem quadrática) e double hashing(dispersão dupla).
 #Endereçamento fechado se refere a ideia de que, independentemente de ocorrer uma colisão em um indice fornecido pela função hash, vamos armazenar todos os dados naqula mesma posição, ou seja, permitimos que multiplos dados possuam o mesmo valor hash. Isso é possível adotando a estratégia de colocar em cada slot da tabela, uma outra estrutura de dados capazes de armazenar todas as ocorrencias de dados no indice fornecido pela função hash. Essa técnica também é conhecida como 'hashing aberto', pois não inserimos os dados na posição de indice da tabela, mas sim saímos dessa posição de indice para inserir esse dado em uma outra estrutura.Existem muitas técnicas e estruturas que podemos escolher para inserir essas ocorrencias de colisões, sendo as mais conhecidas: Encadeamento (cada slot da tabela possui uma lista encadeada), vetores (cada slot da tabela possui uma lista comum) e arvores binarias de busca (cada slot da tabela possui uma arvore binaria de busca). 
-#Vale ressaltar que a adoção de diferentes técnicas causam diferentes comportamentos na tabela, fazendo com que na análise de pior caso, possamos ter resultados diferentes de complexidade 
+#Vale ressaltar que a adoção de diferentes técnicas causam diferentes comportamentos na tabela, fazendo com que na análise de pior caso, possamos ter resultados diferentes de complexidade
 
-#A abordagem utilizada abaixo para resolver colisões — sondagem quadrática (Quadractic Probing) — pode não ser a mais adequada
-# em todos os casos também. Isso porque apesar de não formar mais agrupamentos sucessivos na tabela, o padrão de sondagem é fixo e, ao ocorrer colisões, os dados serão inseridos de forma padronizada pois o incremento para a próxima posição de indice é o mesmo para todas as chaves que possuirem o mesmo valor hash e isso pode gerar um *cluster* (agrupamento) secundário de elementos em uma sequencia padronizada de slots. No pior caso, com a tabela completamente cheia, as operações de inserção e busca passam a ter complexidade O(n), já que é necessário verificar posições suceesivas padronizadas até encontrar o slot correto. Mesmo com o fator de carga sendo controlado e, portanto o pior cenário da tabela estar completamente cheia não poder existir, essa formação de clusters pode fazer com que até em análise de caso médio as operações assumam complexidade de O(n)
+#A abordagem utilizada abaixo — Double Hashing — é geralmente considerada a mais eficiente entre as técnicas de endereçamento aberto, pois o incremento usado para sondagem depende de uma segunda função hash aplicada à chave. Diferente da sondagem linear e quadrática, cujo padrão de sondagem é fixo ou previsível, o Double Hashing gera sequências de sondagem diferentes para chaves distintas, o que evita a formação de clusters e melhora a distribuição dos dados na tabela. Assim, mesmo com um fator de carga razoável, a complexidade média de inserção, busca e remoção permanece O(1), ao passo que nas outras técnicas ainda pode haver piora para O(n) devido à formação de agrupamentos de dados.
 class HashItem:
     def __init__(self, chave, valor):
-        self.chave = chave 
+        self.chave = chave
         self.valor = valor
 
 class HashTable:
     def __init__(self, tamanho):
         self.tamanho = tamanho
-        self.tabela = [None for slots in range(self.tamanho)]
+        self.tabela =[None for slots in range(self.tamanho)]
         self.qtdItens = 0
 
-    def funcaoHash(self, chave):
+    def funcaoHash1(self, chave):
         indice = 0
         multiplicador = 1
         for caractere in chave:
             indice += ord(caractere) * multiplicador
             multiplicador += 1
         return indice % self.tamanho
-    
+
+    def funcaoHash2(self, chave):
+        indice = 0
+        multiplicador = 1
+        for caractere in chave:
+            indice += ord(caractere) * multiplicador
+            multiplicador += 1
+        return indice
+
     def checarTamanho(self):
         fatorCarga = self.qtdItens / self.tamanho
         if fatorCarga > 0.65:
@@ -43,62 +50,58 @@ class HashTable:
     
     def inserirTabela(self, chave, valor):
         dado = HashItem(chave, valor)
-        indice = self.funcaoHash(dado.chave)
-        polinomio = 1
+        somador = 1
+        indice = self.funcaoHash1(chave)
         while self.tabela[indice] != None and self.tabela[indice] != '*':
-            if dado.chave == self.tabela[indice].chave:
-                print('Item ja se encontra na tabela!')
+            if self.tabela[indice].chave == dado.chave:
+                print('item ja está na tabela')
                 break
-            #Utilizando quadractic probing para resolver as colisões:
-            indice = (indice + polinomio*polinomio) % self.tamanho
-            polinomio += 1
+            #Utilizando double hashing para resolver as colisões:
+            indice = (indice + somador * (5 - (self.funcaoHash2(dado.chave) % 5))) % self.tamanho
+            somador += 1
         if self.tabela[indice] == None or self.tabela[indice] == '*':
             self.tabela[indice] = dado
             self.qtdItens += 1
-            self.checarTamanho()
 
     def procurarTabela(self, chave):
-        indice = self.funcaoHash(chave)
-        polinomio = 1
+        indice = self.funcaoHash1(chave)
+        somador = 1
         while self.tabela[indice] != None:
             if self.tabela[indice] != '*' and self.tabela[indice].chave == chave:
-                print(f'o item {chave} está na tabela')
+                print(f'{chave} está na tabela')
                 return self.tabela[indice].valor
-            #Utilizando quadractic probing para percorrer as colisões:
-            indice = (indice + polinomio * polinomio) % self.tamanho
-            polinomio += 1
+            #Utilizando double hashing para percorrer as colisões:
+            indice = (indice + somador * (5 - (self.funcaoHash2(chave) % 5))) % self.tamanho
+            somador += 1
         if self.tabela[indice] == None:
-            print('item não existe na tabela')
+            print(f'{chave} não existe na tabela')
             return None
-        
+
     def removerTabela(self, chave):
-        indice = self.funcaoHash(chave)
-        polinomio = 1
+        indice = self.funcaoHash1(chave)
+        somador = 1
         while self.tabela[indice] != None:
             if self.tabela[indice] != '*' and self.tabela[indice].chave == chave:
                 self.tabela[indice] = '*'
-                print('Item excluido')
-                self.qtdItens -= 1
+                print(f'removendo o dado {chave} da tabela')
                 return
-            #Utilizando quadractic probing para percorrer as colisões:
-            indice = (indice + polinomio * polinomio) % self.tamanho
-            polinomio += 1
+            #Utilizando double hashing para percorrer as colisões:
+            indice = (indice + somador * (5 - (self.funcaoHash2(chave) % 5))) % self.tamanho
+            somador += 1
         if self.tabela[indice] == None:
-            print('item não está na tabela')
-            return None
-
+            print(f'o dado {chave} ja não existia na tabela')
     
     def __setitem__(self, chave, valor):
         self.inserirTabela(chave, valor)
-
+    
     def __getitem__(self, chave):
         return self.procurarTabela(chave)
-    
+
     def __delitem__(self, chave):
         return self.removerTabela(chave)
 
-#------------------------------------------------------------------------------------------------------------------------
-#Testando a tabela como se ela fosse um dicionario 
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------
+#Testando a tabela hash com double Hashing
 
 tabelaHash = HashTable(13)
 
@@ -112,3 +115,5 @@ print(tabelaHash['joao'])
 
 del tabelaHash['jose']
 print(tabelaHash['jose'])
+
+del tabelaHash['cintia']
