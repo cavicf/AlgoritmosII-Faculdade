@@ -1,5 +1,5 @@
 #Implementação do bubble-sort 
-#ele é um algoritmo estavel por sua natureza de trocar elementos adjacentes, da esquerda pra direita< então o que aparece primeiro será colocado antes do que o que aparece depois e eles não trocam entre si, pois a troca só ocorre se o elemento da esquerda for estritamente maior ou menor que o da direita
+#ele é um algoritmo estavel por sua natureza de trocar elementos adjacentes, da esquerda pra direita então o que aparece primeiro será colocado antes do que o que aparece depois e eles não trocam entre si, pois a troca só ocorre se o elemento da esquerda for estritamente maior ou menor que o da direita
 
 def bubbleSort(lista):
     ultimoIndice = len(lista) - 1 #é o ultimo indice da minha lista que vai de 0 até n-1
