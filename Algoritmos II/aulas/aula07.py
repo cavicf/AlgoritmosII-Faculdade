@@ -79,9 +79,9 @@ def quicksort(lista, esq, dir):
         p = partition(lista, esq, dir)
         quicksort(lista, esq, p-1)
         quicksort(lista, p+1, dir)
+        
 
-sys.setrecursionlimit(100000)
-lista = list((range(0,10000)))
+lista = [56,89,23,99,45,12,66,78,34]
 quicksort(lista, 0, (len(lista)-1))
 print(lista)
 

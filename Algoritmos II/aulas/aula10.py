@@ -44,12 +44,12 @@ def countingSort(lista, k):
         c[a] += 1
     for i in range(1, k+1):
         c[i] = c[i] + c[i-1]
-    for i in range(len(lista)-1, -1), -1:
+    for i in range(len(lista)-1, -1, -1):
         a = lista[i]
         B[c[a]-1] = a
         c[a] -= 1
     return B
-
+ 
 lista2 = [3,3,4,2,1,8,0,1]
 list = countingSort(lista2, 8)
 print(list)
