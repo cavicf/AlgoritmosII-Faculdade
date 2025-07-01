@@ -18,8 +18,7 @@ Durante o curso, revisamos a linguagem Python e estudamos estruturas de dados si
     - 🔑 Double Hashing
     - ⛓ Separate Chaining
 
-No momento, estamos focados em algoritmos de ordenação, tendo visto até agora:
-- 🫧 Bubble-Sort
+No conceito de algoritmos de ordenação, foram vistos:
 - 📥 Insertion-Sort
 - 🏃‍♂️‍➡️ Quick-Sort
 - 🔀 Merge-Sort
@@ -29,9 +28,12 @@ No momento, estamos focados em algoritmos de ordenação, tendo visto até agora
 - 🪣 Bucket-Sort
 - 🧮 Radix-Sort
 
-E ainda serão explorados conceitos como:
-- 🌳 Árvore Rubro-Negra
+No ramo de árvores balanceadas foram vistas:
+- 🌳 Árvore Rubro-Negra Esquerdistas
+- 🌳 Árvore AVL
 
+E também estudamos um tipo de árvore eficiente quando se trata de leituras e gravações em disco:
+- 🌳 Árvore B
 ---
 
 ### 🛠️ Tecnologias Utilizadas
