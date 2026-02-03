@@ -51,4 +51,4 @@ O repositório está organizado em pastas:
 ---
 
 ### 🏁 Status
-🔄 O repositório está **em andamento**, pois é referente a uma disciplina atual deste semestre.
+🎓 Disciplina concluída com êxito. Este repositório serve como registro da minha evolução e aprendizado na disciplina de Algoritmos e Programação II.
